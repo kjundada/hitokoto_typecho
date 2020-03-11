@@ -69,13 +69,12 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      * @param string $before
      * @throws Typecho_Exception
      */
-    public static function yiyan($before = '每日语录 ')
+    public static function output($say)
     {
         $options = Helper::options();
         Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin');
         $site = $options->plugin('yiyan_Plugin')->site;
         $say = file_get_contents('$site');
-        $res = $before . $say;
-        echo $res;
+        echo $say;
     }
 }
