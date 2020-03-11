@@ -45,11 +45,6 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     public static function config(Typecho_Widget_Helper_Form $form)
     {
         /** 分类名称 */
-        preg_match("/^(http(s)?:\/\/)?([^\/]+)/i", Helper::options()->siteUrl, $matches);
-        $domain = $matches[2] ? $matches[2] : '';
-        $site = new Typecho_Widget_Helper_Form_Element_Text('site', NULL, $domain, _t('站点域名'), _t('如果是本站请填写https://yousite/usr/plugins/yiyan/php/'));
-        echo '骚话在php文件夹下的txt文件中,请把yiyan.php放到主题目录下,再加一个yiyan页面(自定义模板里选择yiyan),你可以修改yiyan.php';
-        $form->addInput($site);
     }
     
     /**
@@ -71,10 +66,8 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      */
     public static function output($say)
     {
-        $options = Helper::options();
-        Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin');
-        $site = $options->plugin('yiyan_Plugin')->site;
-        $say = file_get_contents('$site');
-        echo '$say';
+       $web = $_SERVER['HTTP_HOST'];   
+       $yiyan = file_get_contents("http://$web/usr/plugins/yiyan/php/");
+       echo $yiyan;  
     }
 }
