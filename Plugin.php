@@ -64,7 +64,7 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      * @param string $before
      * @throws Typecho_Exception
      */
-    public static function output($say)
+    public static function output($content)
     {
     //获取句子文件的绝对路径
     //如果你介意别人可能会拖走这个文本，可以把文件名自定义一下，或者通过Nginx禁止拉取也行。
