@@ -111,6 +111,8 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      */
     public static function output($url_txt)
     {
-
+        $url = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
+        $url_txt = file_get_contents("$url");
+        echo $url_txt;  
     }
 }
