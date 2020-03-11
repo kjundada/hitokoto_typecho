@@ -19,7 +19,6 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      */
     public static function activate()
     {
-        Typecho_Plugin::factory('admin/menu.php')->navBar = array('yiyan_Plugin', 'post');
         return("成功开启插件,快去设置吧~");
     }
     
