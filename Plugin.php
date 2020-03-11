@@ -45,12 +45,6 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     public static function config(Typecho_Widget_Helper_Form $form)
     {
         /** 分类名称 */
-        echo '<h3>如果是本站只需要写http://yourdomain/usr/yiyan/php/</h3>';
-        echo '<h3>如果是一言官方API需写:http://v1.hitokoto.cn/?encode=text</h3>';
-        preg_match("/^(http(s)?:\/\/)?([^\/]+)/i", Helper::options()->siteUrl, $matches);
-        $domain = $matches[2] ? $matches[2] : '';
-        $site = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, '$domain/usr/yiyan/php/', _t('填你的API地址,加上http://'));
-        $form->addInput($site);
     }
     
     /**
@@ -72,15 +66,32 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      */
     public static function output($say)
     {
-       $url = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
-    //获取页面内容
-    $ch = curl_init();
-    curl_setopt ($ch, CURLOPT_URL, $url);
-    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT,20);
-    $res = curl_exec($ch);
-    curl_close($ch);
-    $res = mb_convert_encoding($res, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');    
-    echo '$res';
+    //获取句子文件的绝对路径
+    //如果你介意别人可能会拖走这个文本，可以把文件名自定义一下，或者通过Nginx禁止拉取也行。
+    $path = dirname(__FILE__);
+    $file = file($path."/hitokoto.txt");
+ 
+    //随机读取一行
+    $arr  = mt_rand( 0, count( $file ) - 1 );
+    $content  = trim($file[$arr]);
+ 
+    //编码判断，用于输出相应的响应头部编码
+    if (isset($_GET['charset']) && !empty($_GET['charset'])) {
+    $charset = $_GET['charset'];
+    if (strcasecmp($charset,"gbk") == 0 ) {
+        $content = mb_convert_encoding($content,'gbk', 'utf-8');
+    }
+    } else {
+
+    $charset = 'utf-8';
+    }
+    header("Content-Type: text/html; charset=$charset");
+ 
+    //格式化判断，输出js或纯文本
+    if ($_GET['format'] === 'js') {
+    echo "function hitokoto(){document.write('" . $content ."');}";
+    } else {
+    echo $content;
+    }
     }
 }
