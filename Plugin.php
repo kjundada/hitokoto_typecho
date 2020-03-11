@@ -45,6 +45,8 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     public static function config(Typecho_Widget_Helper_Form $form)
     {
         /** 分类名称 */
+        $site = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, '域名', _t('填你的API地址,加上http://'), _t('若本站则留空'));
+        $form->addInput($site);
     }
     
     /**
@@ -56,6 +58,14 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      */
     public static function personalConfig(Typecho_Widget_Helper_Form $form){}
     
+
+    //判断配置面板输入是否为空,为空则执行output($content),若不为空,则执行output($url_txt)
+
+
+
+
+
+
     /**
      * 显示一言(自制骚话)
      * 语法: yiyan_Plugin::output();
@@ -93,5 +103,14 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     } else {
     echo $content;
     }
+    }
+    /**
+     * @author kjundada
+     * @param string $before
+     * @throws Typecho_Exception
+     */
+    public static function output($url_txt)
+    {
+
     }
 }
