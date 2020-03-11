@@ -1,0 +1,1 @@
+<?php yiyan_Plugin::yiyan() ?>
