@@ -63,7 +63,7 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     
     /**
      * 显示一言(自制骚话)
-     * 语法: yiyan_Plugin::yiyan();
+     * 语法: yiyan_Plugin::output();
      * 输出：'骚话'
      * @author kjundada
      * @param string $before
@@ -75,6 +75,6 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
         Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin');
         $site = $options->plugin('yiyan_Plugin')->site;
         $say = file_get_contents('$site');
-        echo $say;
+        echo '$say';
     }
 }
