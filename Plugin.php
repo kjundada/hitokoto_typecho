@@ -47,7 +47,9 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
         /** 分类名称 */
         echo '<h3>如果是本站只需要写http://yourdomain/usr/yiyan/php/</h3>';
         echo '<h3>如果是一言官方API需写:http://v1.hitokoto.cn/?encode=text</h3>';
-        $site = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, 'API地址', _t('填你的API地址,加上http://'));
+        preg_match("/^(http(s)?:\/\/)?([^\/]+)/i", Helper::options()->siteUrl, $matches);
+        $domain = $matches[2] ? $matches[2] : '';
+        $site = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, '$domain/usr/yiyan/php/', _t('填你的API地址,加上http://'));
         $form->addInput($site);
     }
     
@@ -70,7 +72,7 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      */
     public static function output($say)
     {
-       $url = (Typecho_Widget::widget('Widget_Options')->plugin('yi')->word);
+       $url = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
        $yiyan = file_get_contents("$url");
        echo $yiyan;    
     }
