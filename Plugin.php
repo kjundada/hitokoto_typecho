@@ -68,7 +68,7 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      * @param string $before
      * @throws Typecho_Exception
      */
-    public static function footer()
+    public static function footer($say)
     {
         $options = Helper::options();
         if( is_null($options->plugin('yiyan')->api) )
@@ -77,6 +77,6 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
         }
         $api = $options->plugin('yiyan')->api;
         $say = file_get_contents($api);
-        echo '<h5>$say</h5>';
+        //echo '<h5>$say</h5>';
     }
 }
