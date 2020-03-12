@@ -71,12 +71,12 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     public static function footer($say)
     {
         $options = Helper::options();
-        if( is_null($options->plugin('yiyan')->api) )
+        /*if( is_null($options->plugin('yiyan')->api) )
         {
             return('没有API');
-        }
+        }*/
         $api = $options->plugin('yiyan')->api;
         $say = file_get_contents($api);
-        //echo '<h5>$say</h5>';
+        echo ($say);
     }
 }
