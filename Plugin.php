@@ -19,6 +19,7 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      */
     public static function activate()
     {
+        Typecho_Plugin::factory('Widget_Archive_footer')->footer = array('yiyan_Plugin', 'footer');      
         return("成功开启插件,快去设置吧~");
     }
     
@@ -45,8 +46,8 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     public static function config(Typecho_Widget_Helper_Form $form)
     {
         /** 分类名称 */
-        $site = new Typecho_Widget_Helper_Form_Element_Text('word', NULL, '域名', _t('填你的API地址,加上http://'), _t('若本站则留空'));
-        $form->addInput($site);
+        $api = new Typecho_Widget_Helper_Form_Element_Text('api', NULL, NULL, _t('填你的API地址,加上http://'),);
+        $form->addInput($api);
     }
     
     /**
@@ -67,45 +68,14 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      * @param string $before
      * @throws Typecho_Exception
      */
-    public static function output($say)
+    public static function footer($say)
     {
-        $site = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
-        if (empty($site)) 
-        {
-            //获取句子文件的绝对路径
-            //如果你介意别人可能会拖走这个文本，可以把文件名自定义一下，或者通过Nginx禁止拉取也行。
-            $path = dirname(__FILE__);
-            $file = file($path."/hitokoto.txt");
- 
-            //随机读取一行
-            $arr  = mt_rand( 0, count( $file ) - 1 );
-            $say  = trim($file[$arr]);
- 
-            //编码判断，用于输出相应的响应头部编码
-            if (isset($_GET['charset']) && !empty($_GET['charset'])) {
-            $charset = $_GET['charset'];
-            if (strcasecmp($charset,"gbk") == 0 ) {
-            $say = mb_convert_encoding($say,'gbk', 'utf-8');
-            }
-            } else {
-
-            $charset = 'utf-8';
-            }
-            header("Content-Type: text/html; charset=$charset");
- 
-            //格式化判断，输出js或纯文本
-            if ($_GET['format'] === 'js') {
-            echo "function hitokoto(){document.write('" . $say ."');}";
-            } else {
-            echo $say;
-            }
+        $options = Helper::options();
+        if( is_null($options->plugin('yiyan')->api) ){
+            return('没有API');
         }
-        else
-        {
-            $site = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
-            $say = file_get_contents("$site");
-            echo $say;
-        }
+        $api = $options->plugin('yiyan')->api;
+        $say = file_get_contents($api);
+        echo '$say';
     }
-
 }
