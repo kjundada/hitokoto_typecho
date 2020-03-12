@@ -59,13 +59,6 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
     public static function personalConfig(Typecho_Widget_Helper_Form $form){}
     
 
-    //判断配置面板输入是否为空,为空则执行output($content),若不为空,则执行output($url_txt)
-
-
-
-
-
-
     /**
      * 显示一言(自制骚话)
      * 语法: yiyan_Plugin::output();
@@ -74,45 +67,45 @@ class yiyan_Plugin implements Typecho_Plugin_Interface
      * @param string $before
      * @throws Typecho_Exception
      */
-    public static function output($content)
+    public static function output($say)
     {
-    //获取句子文件的绝对路径
-    //如果你介意别人可能会拖走这个文本，可以把文件名自定义一下，或者通过Nginx禁止拉取也行。
-    $path = dirname(__FILE__);
-    $file = file($path."/hitokoto.txt");
+        $site = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
+        if (empty($site)) 
+        {
+            //获取句子文件的绝对路径
+            //如果你介意别人可能会拖走这个文本，可以把文件名自定义一下，或者通过Nginx禁止拉取也行。
+            $path = dirname(__FILE__);
+            $file = file($path."/hitokoto.txt");
  
-    //随机读取一行
-    $arr  = mt_rand( 0, count( $file ) - 1 );
-    $content  = trim($file[$arr]);
+            //随机读取一行
+            $arr  = mt_rand( 0, count( $file ) - 1 );
+            $say  = trim($file[$arr]);
  
-    //编码判断，用于输出相应的响应头部编码
-    if (isset($_GET['charset']) && !empty($_GET['charset'])) {
-    $charset = $_GET['charset'];
-    if (strcasecmp($charset,"gbk") == 0 ) {
-        $content = mb_convert_encoding($content,'gbk', 'utf-8');
-    }
-    } else {
+            //编码判断，用于输出相应的响应头部编码
+            if (isset($_GET['charset']) && !empty($_GET['charset'])) {
+            $charset = $_GET['charset'];
+            if (strcasecmp($charset,"gbk") == 0 ) {
+            $say = mb_convert_encoding($say,'gbk', 'utf-8');
+            }
+            } else {
 
-    $charset = 'utf-8';
-    }
-    header("Content-Type: text/html; charset=$charset");
+            $charset = 'utf-8';
+            }
+            header("Content-Type: text/html; charset=$charset");
  
-    //格式化判断，输出js或纯文本
-    if ($_GET['format'] === 'js') {
-    echo "function hitokoto(){document.write('" . $content ."');}";
-    } else {
-    echo $content;
+            //格式化判断，输出js或纯文本
+            if ($_GET['format'] === 'js') {
+            echo "function hitokoto(){document.write('" . $say ."');}";
+            } else {
+            echo $say;
+            }
+        }
+        else
+        {
+            $site = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
+            $say = file_get_contents("$site");
+            echo $say;
+        }
     }
-    }
-    /**
-     * @author kjundada
-     * @param string $before
-     * @throws Typecho_Exception
-     */
-    public static function output($url_txt)
-    {
-        $url = (Typecho_Widget::widget('Widget_Options')->plugin('yiyan_Plugin')->word);
-        $url_txt = file_get_contents("$url");
-        echo $url_txt;  
-    }
+
 }
